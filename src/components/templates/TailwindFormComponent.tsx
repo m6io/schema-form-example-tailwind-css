@@ -65,7 +65,9 @@ export const TailwindFormComponent: React.FC<{
   customFields?: CustomFields;
 }> = ({ onSubmit, onError, customFields = {} }) => {
   const schema = useFormContext((state) => state.schema);
-  const formData = useFormContext((state) => state.formData);
+  const formData = useFormContext(
+    (state) => state.formData as { [key: string]: unknown }
+  );
   const setErrors = useFormContext((state) => state.setErrors);
 
   const handleSubmit = (event: React.FormEvent) => {
