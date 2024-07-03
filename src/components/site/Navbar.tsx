@@ -13,7 +13,7 @@ export function Navbar() {
                 className="inline-flex h-10 items-center justify-center text-lg font-bold text-gray-800 dark:text-white"
                 href="/"
               >
-                @m6oss/schema-form
+                @react-formgen/json-schema
               </a>
             </div>
             <div className="flex flex-1 items-center justify-end">
@@ -27,7 +27,7 @@ export function Navbar() {
                   <SiYoutube className="h-full w-full" />
                 </a>
                 <a
-                  href="https://github.com/m6io/schema-form"
+                  href="https://github.com/m6io/react-formgen"
                   target="_blank"
                   className="h-10 w-10 p-2 text-gray-800 hover:text-[#4078c0] dark:text-white dark:hover:text-[#4078c0]" // Brand color from https://brandcolors.net/b/github
                 >

@@ -7,7 +7,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       <main className="p-10 sm:px-16 lg:px-44">
         <div className="mx-auto max-w-3xl space-y-20">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-            @m6oss/schema-form - Tailwind CSS Example
+            @react-formgen/json-schema - Tailwind CSS Example
           </h1>
           {children}
         </div>

@@ -1,4 +1,4 @@
-import { CustomFields } from "@m6oss/schema-form";
+import { CustomFields } from "@react-formgen/json-schema";
 import { TailwindArrayField } from "./TailwindArrayField";
 import { TailwindBooleanField } from "./TailwindBooleanField";
 import { TailwindNumberField } from "./TailwindNumberField";
