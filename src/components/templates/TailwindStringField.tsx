@@ -1,5 +1,40 @@
-import { StringSchema, useFieldData, useFieldErrors } from "@react-formgen/json-schema";
+import React from "react";
+import {
+  StringSchema,
+  useFormDataAtPath,
+  useErrorsAtPath,
+  useFormContext,
+  FormState,
+} from "@react-formgen/json-schema";
 
+const ReadonlyPrimitiveTemplate: React.FC<{
+  title?: string;
+  value: string | number | boolean | null;
+  description?: string;
+}> = ({ title, value, description }) => {
+  return (
+    <div className="mb-4">
+      {title && <strong>{title}: </strong>}
+      <span>{value ?? "N/A"}</span>
+      {description && (
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {description}
+        </p>
+      )}
+    </div>
+  );
+};
+
+/**
+ * Tailwind String Template
+ * Handles switching between input, textarea, select, and date fields based on the uiSchema and schema format, if applicable.
+ * @param {StringSchema} schema - The schema for the string property.
+ * @param {string[]} path - The path to the string property in the form data.
+ * @returns {JSX.Element} - The string template component.
+ * @example
+ * <TailwindStringField schema={schema} path={path} />
+ *
+ */
 export const TailwindStringField: React.FC<{
   schema: StringSchema;
   path: string[];
@@ -32,8 +67,19 @@ const TailwindInputField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const [valueAtPath, setValueAtPath] = useFieldData(path);
-  const errorsAtPath = useFieldErrors(path);
+  const [valueAtPath, setValueAtPath] = useFormDataAtPath(path);
+  const errorsAtPath = useErrorsAtPath(path);
+  const readonly = useFormContext((state: FormState) => state.readonly);
+
+  if (readonly) {
+    return (
+      <ReadonlyPrimitiveTemplate
+        title={schema.title ?? undefined}
+        value={valueAtPath}
+        description={schema.description ?? undefined}
+      />
+    );
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueAtPath(event.target.value);
@@ -49,7 +95,7 @@ const TailwindInputField: React.FC<{
   return (
     <div className="flex flex-col">
       {schema.title && (
-        <label className="font-semibold dark:text-zinc-200">
+        <label className="font-semibold dark:text-gray-200">
           {schema.title}
         </label>
       )}
@@ -63,10 +109,10 @@ const TailwindInputField: React.FC<{
             ? `${path.join("-")}-datalist`
             : undefined
         }
-        className="w-48 p-2 border border-zinc-300 rounded dark:border-zinc-600 text-zinc-900 dark:text-zinc-200 bg-white dark:bg-zinc-800"
+        className="w-48 p-2 border border-gray-300 rounded dark:border-gray-600 text-gray-900 dark:text-gray-200 bg-white dark:bg-gray-800"
       />
       {schema.description && (
-        <small className="text-zinc-500 dark:text-zinc-400">
+        <small className="text-gray-500 dark:text-gray-400">
           {schema.description}
         </small>
       )}
@@ -99,8 +145,19 @@ const TailwindTextareaField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const [valueAtPath, setValueAtPath] = useFieldData(path);
-  const errorsAtPath = useFieldErrors(path);
+  const [valueAtPath, setValueAtPath] = useFormDataAtPath(path);
+  const errorsAtPath = useErrorsAtPath(path);
+  const readonly = useFormContext((state: FormState) => state.readonly);
+
+  if (readonly) {
+    return (
+      <ReadonlyPrimitiveTemplate
+        title={schema.title ?? undefined}
+        value={valueAtPath}
+        description={schema.description ?? undefined}
+      />
+    );
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValueAtPath(event.target.value);
@@ -109,7 +166,7 @@ const TailwindTextareaField: React.FC<{
   return (
     <div className="flex flex-col">
       {schema.title && (
-        <label className="font-semibold dark:text-zinc-200">
+        <label className="font-semibold dark:text-gray-200">
           {schema.title}
         </label>
       )}
@@ -117,10 +174,10 @@ const TailwindTextareaField: React.FC<{
         value={valueAtPath ?? ""}
         onChange={handleChange}
         placeholder={schema.title || ""}
-        className="w-48 p-2 border border-zinc-300 rounded dark:border-zinc-600 text-zinc-900 dark:text-zinc-200 bg-white dark:bg-zinc-800"
+        className="w-48 p-2 border border-gray-300 rounded dark:border-gray-600 text-gray-900 dark:text-gray-200 bg-white dark:bg-gray-800"
       />
       {schema.description && (
-        <small className="text-zinc-500 dark:text-zinc-400">
+        <small className="text-gray-500 dark:text-gray-400">
           {schema.description}
         </small>
       )}
@@ -146,8 +203,19 @@ const TailwindSelectField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const [valueAtPath, setValueAtPath] = useFieldData(path, "");
-  const errorsAtPath = useFieldErrors(path);
+  const [valueAtPath, setValueAtPath] = useFormDataAtPath(path, "");
+  const errorsAtPath = useErrorsAtPath(path);
+  const readonly = useFormContext((state: FormState) => state.readonly);
+
+  if (readonly) {
+    return (
+      <ReadonlyPrimitiveTemplate
+        title={schema.title ?? undefined}
+        value={valueAtPath}
+        description={schema.description ?? undefined}
+      />
+    );
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setValueAtPath(event.target.value);
@@ -156,14 +224,14 @@ const TailwindSelectField: React.FC<{
   return (
     <div className="flex flex-col">
       {schema.title && (
-        <label className="font-semibold dark:text-zinc-200">
+        <label className="font-semibold dark:text-gray-200">
           {schema.title}
         </label>
       )}
       <select
         value={valueAtPath}
         onChange={handleChange}
-        className="w-48 p-2 border border-zinc-300 rounded dark:border-zinc-600 text-zinc-900 dark:text-zinc-200 bg-white dark:bg-zinc-800"
+        className="w-48 p-2 border border-gray-300 rounded dark:border-gray-600 text-gray-900 dark:text-gray-200 bg-white dark:bg-gray-800"
       >
         <option value=""></option>
         {schema.enum
@@ -179,7 +247,7 @@ const TailwindSelectField: React.FC<{
             ))}
       </select>
       {schema.description && (
-        <small className="text-zinc-500 dark:text-zinc-400">
+        <small className="text-gray-500 dark:text-gray-400">
           {schema.description}
         </small>
       )}
@@ -205,8 +273,19 @@ const TailwindDateField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const [valueAtPath, setValueAtPath] = useFieldData(path, "");
-  const errorsAtPath = useFieldErrors(path);
+  const [valueAtPath, setValueAtPath] = useFormDataAtPath(path, "");
+  const errorsAtPath = useErrorsAtPath(path);
+  const readonly = useFormContext((state: FormState) => state.readonly);
+
+  if (readonly) {
+    return (
+      <ReadonlyPrimitiveTemplate
+        title={schema.title ?? undefined}
+        value={valueAtPath}
+        description={schema.description ?? undefined}
+      />
+    );
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueAtPath(event.target.value);
@@ -218,7 +297,7 @@ const TailwindDateField: React.FC<{
   return (
     <div className="flex flex-col">
       {schema.title && (
-        <label className="font-semibold dark:text-zinc-200">
+        <label className="font-semibold dark:text-gray-200">
           {schema.title}
         </label>
       )}
@@ -227,10 +306,10 @@ const TailwindDateField: React.FC<{
         value={valueAtPath}
         onChange={handleChange}
         placeholder={schema.title || ""}
-        className="w-48 p-2 border border-zinc-300 rounded dark:border-zinc-600 text-zinc-900 dark:text-zinc-200 bg-white dark:bg-zinc-800"
+        className="w-48 p-2 border border-gray-300 rounded dark:border-gray-600 text-gray-900 dark:text-gray-200 bg-white dark:bg-gray-800"
       />
       {schema.description && (
-        <small className="text-zinc-500 dark:text-zinc-400">
+        <small className="text-gray-500 dark:text-gray-400">
           {schema.description}
         </small>
       )}

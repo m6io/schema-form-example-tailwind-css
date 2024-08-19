@@ -1,4 +1,4 @@
-import { CustomFields } from "@react-formgen/json-schema";
+import { Templates } from "@react-formgen/json-schema";
 import { TailwindArrayField } from "./TailwindArrayField";
 import { TailwindBooleanField } from "./TailwindBooleanField";
 import { TailwindNumberField } from "./TailwindNumberField";
@@ -9,12 +9,12 @@ import { TailwindFormComponent } from "./TailwindFormComponent";
 /**
  * Custom Fields Object
  */
-const tailwindCustomFields: CustomFields = {
-  ArrayField: TailwindArrayField,
-  BooleanField: TailwindBooleanField,
-  NumberField: TailwindNumberField,
-  ObjectField: TailwindObjectField,
-  StringField: TailwindStringField,
+export const TailwindTemplates: Templates = {
+  StringTemplate: TailwindStringField,
+  NumberTemplate: TailwindNumberField,
+  BooleanTemplate: TailwindBooleanField,
+  ObjectTemplate: TailwindObjectField,
+  ArrayTemplate: TailwindArrayField,
 };
 
-export { tailwindCustomFields, TailwindFormComponent };
+export { TailwindFormComponent };

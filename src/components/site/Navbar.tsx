@@ -4,7 +4,7 @@ import { useTheme } from "./useTheme";
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-neutral-700 dark:bg-neutral-900">
+    <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-gray-700 dark:bg-gray-900">
       <div className="flex h-16 items-center px-10 sm:px-16 lg:px-44">
         <div className="mx-auto w-full max-w-3xl space-y-20">
           <div className="flex justify-between">

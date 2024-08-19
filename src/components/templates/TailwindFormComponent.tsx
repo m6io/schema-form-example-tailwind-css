@@ -1,7 +1,20 @@
-import { ErrorObject } from "@react-formgen/json-schema";
-import { useFormContext, JSONSchema7, CustomFields } from "@react-formgen/json-schema";
-import { renderField } from "@react-formgen/json-schema";
-import { AjvInstance } from "@react-formgen/json-schema";
+import React from "react";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+import { JSONSchema7 } from "json-schema";
+import {
+  FormRootProps,
+  useFormContext,
+  FormState,
+  RenderTemplate,
+} from "@react-formgen/json-schema";
+
+// Single shared Ajv instance with formats
+export const AjvInstance = new Ajv({
+  allErrors: true,
+  verbose: true,
+}).addKeyword("uiSchema");
+addFormats(AjvInstance);
 
 /**
  * Represents a JSON object.
@@ -50,25 +63,32 @@ function removeKeys(keys: string[], obj: JSONObject): JSONObject {
 }
 
 /**
- * Form Component Template
- * @param {Function} onSubmit - The function to call when the form is submitted.
- * @param {Function} onError - The function to call when the form has errors.
- * @param {CustomFields} customFields - The custom fields object.
- * @returns {JSX.Element} - The form component.
- * @example
- * <TailwindFormComponent onSubmit={onSubmit} onError={onError} customFields={customFields} />
- *
+ * Tailwind Form Template
+ * @param {FormRootProps} props - The props for the TailwindFormComponent.
+ * @returns {JSX.Element} The form component.
  */
-export const TailwindFormComponent: React.FC<{
-  onSubmit: (data: { [key: string]: unknown }) => void;
-  onError: (errors: ErrorObject[], data?: { [key: string]: unknown }) => void;
-  customFields?: CustomFields;
-}> = ({ onSubmit, onError, customFields = {} }) => {
-  const schema = useFormContext((state) => state.schema);
-  const formData = useFormContext(
-    (state) => state.formData as { [key: string]: unknown }
-  );
-  const setErrors = useFormContext((state) => state.setErrors);
+export const TailwindFormComponent: React.FC<FormRootProps> = ({
+  onSubmit,
+  onError,
+}) => {
+  const readonly = useFormContext((state: FormState) => state.readonly);
+  const schema = useFormContext((state: FormState) => state.schema);
+  const formData = useFormContext((state: FormState) => state.formData);
+  const setErrors = useFormContext((state: FormState) => state.setErrors);
+
+  if (readonly) {
+    return (
+      <div className="p-4 flex flex-col gap-4">
+        {Object.keys(schema.properties || {}).map((key) => (
+          <RenderTemplate
+            key={key}
+            schema={schema.properties?.[key] as JSONSchema7}
+            path={[key]}
+          />
+        ))}
+      </div>
+    );
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -93,12 +113,10 @@ export const TailwindFormComponent: React.FC<{
     <form onSubmit={handleSubmit}>
       {Object.keys(schema.properties || {}).map((key) => (
         <div key={key} className="mb-4">
-          {renderField(
-            schema.properties?.[key] as JSONSchema7,
-            [key],
-            schema.definitions || {},
-            customFields
-          )}
+          <RenderTemplate
+            schema={schema.properties?.[key] as JSONSchema7}
+            path={[key]}
+          />
         </div>
       ))}
       <button
